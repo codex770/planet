@@ -322,10 +322,36 @@
     </script>
     <!-- planet related -->
     <!-- planet related -->
-    <script src="{{ asset('assets/mars/js/three.min.js')}}"></script>
-    <script src="{{ asset('assets/mars/js/controls/OrbitControls.js')}}"></script>
-    <script src="{{ asset('assets/mars/js/loaders/GLTFLoader.js')}}"></script>
-
-    <script src="{{ asset('assets/mars/app.js')}}"></script>
-    <script src="{{ asset('assets/mars/js/lights.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r107/three.min.js"></script>
+    <script>
+        // Wait for THREE.js to be available before loading dependent scripts
+        (function() {
+            function loadDependentScripts() {
+                if (typeof THREE !== 'undefined') {
+                    var scripts = [
+                        '{{ asset('assets/mars/js/controls/OrbitControls.js')}}',
+                        '{{ asset('assets/mars/js/loaders/GLTFLoader.js')}}',
+                        '{{ asset('assets/mars/app.js')}}',
+                        '{{ asset('assets/mars/js/lights.js')}}'
+                    ];
+                    
+                    scripts.forEach(function(src, index) {
+                        var script = document.createElement('script');
+                        script.src = src;
+                        script.async = false;
+                        document.head.appendChild(script);
+                    });
+                } else {
+                    // Retry if THREE.js is not yet loaded
+                    setTimeout(loadDependentScripts, 50);
+                }
+            }
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadDependentScripts);
+            } else {
+                loadDependentScripts();
+            }
+        })();
+    </script>
 @endpush 
