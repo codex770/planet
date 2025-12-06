@@ -42,7 +42,6 @@
     <script src="{{ asset('assets/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
     <script src="{{ asset('assets/vendor/magnific-popup/jquery.magnific-popup.min.js')}}"></script>
     <script src="{{ asset('assets/js/creative.js')}}"></script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
     <script src="{{ asset('assets/vendor/owlCarousel/owl.carousel.min.js')}}"></script>
     @stack('scripts')
     
