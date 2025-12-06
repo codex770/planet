@@ -243,115 +243,56 @@
             $('.header-mdl').css('height', '54%');
         });
     </script>
-    <script>
-        var spot2 = {
-            audio: new Audio("../mars_intro_german.mp3"),
-            id: "spot2"
-        }
-        var spot3 = {
-            audio: new Audio("http://www.baereschiss.ch/wp-content/uploads/2017/03/TP_Goldau_Spot_3_27s.mp3"),
-            id: "spot3"
-        }
-        var spot4 = {
-            audio: new Audio("http://www.baereschiss.ch/wp-content/uploads/2017/03/TP_Goldau_Spot_4_30s.mp3"),
-            id: "spot4"
-        }
-
-        var spot1Audio = document.createElement("audio");
-        if (spot1Audio != null && spot1Audio.canPlayType && spot1Audio.canPlayType("audio/mpeg")) {
-            spot1Audio.src = "../mars_intro_german.mp3";
-        } else {
-
-            console.log("hi");
-        }
-        var spot1 = {
-            audio: spot1Audio,
-            id: "spot1"
-        }
-
-        var allSpots = [spot1, spot2];
-
-        $('.play-pause-button').on("click", function () {
-            let spotIdFromHtml = $(this).attr('id');
-            if ($(this).hasClass('fa-play')) {
-                $(this).removeClass('fa-play');
-                $(this).addClass('fa-pause');
-                allSpots.forEach(function (element) {
-                    if (element.id == spotIdFromHtml) {
-                        element.audio.play();
-                    }
-                });
-            } else {
-                $(this).removeClass('fa-pause');
-                $(this).addClass('fa-play');
-                window[spotIdFromHtml].audio.pause();
-            }
-        });
-
-        /*for(var i=0; i< allSpots.length; i++) {
-          allSpots[i].audio.onended = function(){
-            console.log(allSpots[i]);
-             $("[spot=" + allSpots[i].name + "]").removeClass('fa-pause');
-             $("[spot=" + allSpots[i].name + "]").addClass('fa-play');
-          }
-        }*/
-
-        spot1.audio.onended = function () {
-            console.log("hfg");
-            $("[spot=" + spot1.id + "]").removeClass('fa-pause');
-            $("[spot=" + spot1.id + "]").addClass('fa-play');
-        };
-
-        spot2.audio.onended = function () {
-            console.log("hfg");
-            $("[spot=" + spot2.id + "]").removeClass('fa-pause');
-            $("[spot=" + spot2.id + "]").addClass('fa-play');
-        };
-
-        spot3.audio.onended = function () {
-            console.log("hfg");
-            $("[spot=" + spot3.id + "]").removeClass('fa-pause');
-            $("[spot=" + spot3.id + "]").addClass('fa-play');
-        };
-
-        spot4.audio.onended = function () {
-            console.log("hfg");
-            $("[spot=" + spot4.id + "]").removeClass('fa-pause');
-            $("[spot=" + spot4.id + "]").addClass('fa-play');
-        };
-    </script>
     <!-- planet related -->
     <!-- planet related -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r107/three.min.js"></script>
     <script>
-        // Wait for THREE.js to be available before loading dependent scripts
+        // Load THREE.js with multiple fallback options
         (function() {
-            function loadDependentScripts() {
-                if (typeof THREE !== 'undefined') {
-                    var scripts = [
-                        '{{ asset('assets/mars/js/controls/OrbitControls.js')}}',
-                        '{{ asset('assets/mars/js/loaders/GLTFLoader.js')}}',
-                        '{{ asset('assets/mars/app.js')}}',
-                        '{{ asset('assets/mars/js/lights.js')}}'
-                    ];
-                    
-                    scripts.forEach(function(src, index) {
-                        var script = document.createElement('script');
-                        script.src = src;
-                        script.async = false;
-                        document.head.appendChild(script);
-                    });
-                } else {
-                    // Retry if THREE.js is not yet loaded
-                    setTimeout(loadDependentScripts, 50);
+            var threeSources = [
+                '{{ asset('assets/mars/js/three.min.js')}}',
+                'https://cdn.jsdelivr.net/npm/three@0.107.0/build/three.min.js',
+                'https://unpkg.com/three@0.107.0/build/three.min.js'
+            ];
+            
+            function tryLoadThree(index) {
+                if (index >= threeSources.length) {
+                    console.error('Failed to load THREE.js from all sources');
+                    return;
                 }
+                
+                var script = document.createElement('script');
+                script.src = threeSources[index];
+                script.crossOrigin = 'anonymous';
+                script.onerror = function() {
+                    tryLoadThree(index + 1);
+                };
+                script.onload = function() {
+                    if (typeof THREE !== 'undefined') {
+                        loadDependentScripts();
+                    } else {
+                        tryLoadThree(index + 1);
+                    }
+                };
+                document.head.appendChild(script);
             }
             
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', loadDependentScripts);
-            } else {
-                loadDependentScripts();
+            function loadDependentScripts() {
+                var scripts = [
+                    '{{ asset('assets/mars/js/controls/OrbitControls.js')}}',
+                    '{{ asset('assets/mars/js/loaders/GLTFLoader.js')}}',
+                    '{{ asset('assets/mars/app.js')}}',
+                    '{{ asset('assets/mars/js/lights.js')}}'
+                ];
+                
+                scripts.forEach(function(src) {
+                    var script = document.createElement('script');
+                    script.src = src;
+                    script.async = false;
+                    document.head.appendChild(script);
+                });
             }
+            
+            tryLoadThree(0);
         })();
     </script>
 @endpush 

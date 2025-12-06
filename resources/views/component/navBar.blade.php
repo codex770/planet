@@ -1,7 +1,7 @@
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark" id="mainNav">
         <div class="container-fluid px-0">
             <a class="navbar-brand js-scroll-trigger" href="#page-top">
-                <img src="{{ asset('storage/'.$general->logo) }}" alt="planetenabllee" class="logo1" />
+                <img src="{{ asset('storage/'.$general->logo) }}" alt="planetenabllee" class="logo1" onerror="this.onerror=null; this.src='{{ asset('assets/img/planetenabllee_white_logo.png') }}';" />
             </a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
