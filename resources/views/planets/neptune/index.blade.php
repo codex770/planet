@@ -241,7 +241,7 @@
         })
     })
 
-    $(window).load(function () {
+    $(window).on('load', function () {
         $('.header-mdl').css('height', '54%');
     });
 
